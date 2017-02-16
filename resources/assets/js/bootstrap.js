@@ -63,3 +63,4 @@ Vue.use(VueRouter)
 
 import moment from 'moment'
 Vue.use(moment)
+

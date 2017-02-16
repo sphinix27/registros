@@ -20,4 +20,5 @@ Route::get('/home', function () {
 });
 
 Route::resource('delito', 'DelitosController');
+Route::resource('estado', 'EstadosController');
 Route::resource('registro', 'RegistrosController');

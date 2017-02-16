@@ -11,16 +11,31 @@
                 </div>
             </div>
         </div>
-        <el-button type="primary">Default Button</el-button>
-        <a class="button is-primary">White</a>
-        <ui-button color="primary">Normal</ui-button>
+        <vodal :show="show" animation="door" @hide="show = false">
+            <div>A vue modal with animations.</div>
+        </vodal>
+        <el-button type="primary" @click="show=true">Default Button</el-button>
     </div>
 </template>
 
 <script>
+import Vodal from 'vodal'
     export default {
+        components: { Vodal },
+        data() {
+            return {
+                show: false
+            }
+        },
         mounted() {
             console.log('Component mounted.')
+        },
+        methods: {
         }
     }
 </script>
+
+<style lang="scss">
+@import "~vodal/flip.css";
+@import "~vodal/door.css";
+</style>

@@ -14,6 +14,7 @@ import router from './routes';
  */
 
 Vue.component('sidebar', require('./components/Sidebar.vue'));
+Vue.component('example', require('./components/Example.vue'));
 
 const app = new Vue({
     el: '#app',

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Delito;
+use App\Estado;
+use App\Persona;
 use App\Registro;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,17 +20,15 @@ class RegistrosController extends Controller
      */
     public function index()
     {
-        $registros = Registro::with('delitos')->get();
-        $delitos = Delito::all();
-        $delitosOption = $delitos->map(function ($delito) {
-            return [
-                'label' => $delito->nombre,
-                'value' => $delito->id
-            ];
-        });
+        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados'])->get();
+        $delitos = Delito::select('id', 'nombre')->get();
+        $estados = Estado::select('id', 'nombre')->get();
+        $personas = Persona::select('id', 'nombre')->get();
         return [
             'registros' => $registros,
-            'delitos' => Delito::select('id', 'nombre')->get()
+            'delitos' => $delitos,
+            'estados' => $estados,
+            'personas' => $personas
         ];
     }
 
@@ -40,7 +40,7 @@ class RegistrosController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->validator($request->only(['caso', 'fecha', 'denunciante', 'denunciado', 'estado', 'situacion_procesal', 'observaciones', 'delitos']));
+        $validator = $this->validator($request->only(['caso', 'fecha', 'situacion_procesal', 'observaciones', 'delitos', 'estados', 'denunciantes', 'denunciados']));
 
         if($validator->fails())
         {
@@ -50,15 +50,18 @@ class RegistrosController extends Controller
                 'registro' => $request->all()
             ])->setStatusCode(422);
         }
-        $fecha = Carbon::parse($request->fecha); 
-        $request['fecha'] = $fecha->toDateString();
-        $registro = Registro::create($request->only(['caso', 'fecha', 'denunciante', 'denunciado', 'estado', 'situacion_procesal', 'observaciones']));
-
+        $registro = Registro::formatFecha($request->only(['caso', 'fecha', 'situacion_procesal', 'observaciones']));
+        $registro = Registro::create($registro);
         $registro->delitos()->attach(collect($request->delitos)->pluck('id'));
+        $registro->attachEstados($request->estados);
+        $denunciantes = Persona::createPersonasRegistro($request->denunciantes);
+        $denunciados = Persona::createPersonasRegistro($request->denunciados);
+        $registro->denunciantes()->attach($denunciantes->pluck('id'));
+        $registro->denunciados()->attach($denunciados->pluck('id'));
 
         return [
             'created' => true,
-            'registro' => $registro->load('delitos')
+            'registro' => $registro->load(['delitos', 'estados', 'denunciantes', 'denunciados'])
         ];
     }
 
@@ -73,24 +76,33 @@ class RegistrosController extends Controller
     {
         $registro = Registro::findOrFail($id);
 
-        $validator = $this->validator($request->only(['caso', 'fecha', 'denunciante', 'denunciado', 'estado', 'situacion_procesal', 'observaciones', 'delitos']));
+        $validator = $this->validator($request->only(['caso', 'fecha', 'situacion_procesal', 'observaciones', 'delitos', 'estados', 'denunciantes', 'denunciados']));
 
         if($validator->fails())
         {
             return response()->json([
                 'updated' => false,
                 'errors' => $validator->errors(),
-                'registro' => $registro->load('delitos')
+                'registro' => $registro->load(['delitos', 'estados', 'denunciantes', 'denunciados'])
             ])->setStatusCode(422);
         }
 
-        $registro->update($request->intersect(['caso', 'fecha', 'denunciante', 'denunciado', 'estado', 'situacion_procesal', 'observaciones']));
+        $record = Registro::formatFecha($request->only(['caso', 'fecha', 'situacion_procesal', 'observaciones']));
+        $registro->update($record);
         $registro->delitos()->detach();
         $registro->delitos()->attach(collect($request->delitos)->pluck('id'));
+        $registro->estados()->detach();
+        $registro->attachEstados($request->estados);  
+        $registro->denunciantes()->detach();      
+        $denunciantes = Persona::createPersonasRegistro($request->denunciantes);
+        $registro->denunciantes()->attach($denunciantes->pluck('id'));
+        $registro->denunciados()->detach();
+        $denunciados = Persona::createPersonasRegistro($request->denunciados);
+        $registro->denunciados()->attach($denunciados->pluck('id'));
 
         return [
             'updated' => true,
-            'registro' => $registro->load('delitos')
+            'registro' => $registro->load(['delitos', 'estados', 'denunciantes', 'denunciados'])
         ];
     }
 
@@ -104,6 +116,9 @@ class RegistrosController extends Controller
     {
         $registro = Registro::findOrFail($id);
         $registro->delitos()->detach();
+        $registro->estados()->detach();
+        $registro->denunciantes()->detach();
+        $registro->denunciados()->detach();
         $registro->delete();
         return ['deleted' => true];
     }
@@ -114,12 +129,12 @@ class RegistrosController extends Controller
         return Validator::make($data, [
             'caso' => ['required', 'min:7', 'max:20'],
             'fecha' => ['required', 'date'],
-            'denunciante' => ['required', 'min:3', 'max:50'],
-            'denunciado' => ['required', 'min:3', 'max:50'],
-            'estado' => ['required', Rule::in(['CAUTELAR', 'IMPUTADO', 'INICIADO', 'OBSERVADO', 'DESESTIMADO'])],
-            'situacion_procesal' => ['required', Rule::in(['APRENDIDO PARA CAULTER', 'DISPOSICION DEL JUEZ', 'LIBRE'])],
+            'situacion_procesal' => ['required', Rule::in(['APR', 'DIS', 'LIB'])],
             'observaciones' => ['present', 'max:256'],
-            'delitos' => ['required']
+            'delitos' => ['required'],
+            'estados' => ['required'],
+            'denunciantes' => ['required', 'array'],
+            'denunciados' => ['required', 'array'],
         ]);
     }
 }

@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- Scripts -->
     <script>
@@ -87,6 +88,12 @@
                     <router-link to="/home" >
                         <i class="fa fa-book fa-2x"></i>
                         <span class="nav-text">Home</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/estados" >
+                        <i class="fa fa-briefcase fa-2x"></i>
+                        <span class="nav-text">Estados</span>
                     </router-link>
                 </li>
                 <li>

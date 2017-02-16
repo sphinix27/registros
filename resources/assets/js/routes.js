@@ -10,6 +10,10 @@ let routes = [
         component: require('./views/Delito')
     },
     {
+        path: '/estados',
+        component: require('./views/Estado')
+    },
+    {
         path: '/registro',
         component: require('./views/Registro')
     },

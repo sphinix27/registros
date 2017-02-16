@@ -32,14 +32,28 @@ $factory->define(App\Delito::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Estado::class, function (Faker\Generator $faker) {
+
+    return [
+        'nombre' => $faker->name
+    ];
+});
+
+$factory->define(App\Persona::class, function (Faker\Generator $faker) {
+
+    return [
+        'nombre' => $faker->name
+    ];
+});
+
 $factory->define(App\Registro::class, function (Faker\Generator $faker) {
 
     return [
         'caso' => $faker->numerify('FIS 1######'),
         'fecha' => \Carbon\Carbon::now(),
-        'denunciante' => $faker->name,
-        'denunciado' => $faker->name,
-        'estado' => $faker->randomElement(['CAUTELAR', 'IMPUTADO', 'INICIADO', 'OBSERVADO', 'DESESTIMADO']),
+        // 'denunciante' => $faker->name,
+        // 'denunciado' => $faker->name,
+        // 'estado' => $faker->randomElement(['CAUTELAR', 'IMPUTADO', 'INICIADO', 'OBSERVADO', 'DESESTIMADO']),
         'situacion_procesal' => $faker->randomElement(['APR', 'DIS', 'LIB']),
         'observaciones' => $faker->sentence,
     ];

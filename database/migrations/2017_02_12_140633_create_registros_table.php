@@ -17,10 +17,10 @@ class CreateRegistrosTable extends Migration
             $table->increments('id');
             $table->string('caso', 20)->unique();
             $table->date('fecha');
-            $table->string('denunciante', 50);
-            $table->string('denunciado', 50);
-            $table->enum('estado', ['CAUTELAR', 'IMPUTADO', 'INICIADO', 'OBSERVADO', 'DESESTIMADO']);
-            $table->enum('situacion_procesal', ['APRENDIDO PARA CAULTER', 'DISPOSICION DEL JUEZ', 'LIBRE']);
+            // $table->string('denunciante', 50);
+            // $table->string('denunciado', 50);
+            // $table->enum('estado', ['CAUTELAR', 'IMPUTADO', 'INICIADO', 'OBSERVADO', 'DESESTIMADO']);
+            $table->enum('situacion_procesal', ['APR', 'DIS', 'LIB']);
             $table->text('observaciones')->nullable();
             $table->timestamps();
         });
