@@ -52,7 +52,7 @@ import EstadoRow from '../components/EstadoRow'
 			}
 		},
 		mounted() {
-            axios.get('estado')
+            axios.get('api/estado')
             .then( response => {
 				this.estados = response.data.map(estado => {
 					estado.editing = false
@@ -71,7 +71,7 @@ import EstadoRow from '../components/EstadoRow'
         		this.estados.push(newEstado)
         	},
         	storeEstado(estado){
-        		axios.post('/estado', estado)
+        		axios.post('api/estado', estado)
         		.then(response => {
         			let index = this.estados.indexOf(estado)
         			response.data.estado.editing = false
@@ -92,7 +92,7 @@ import EstadoRow from '../components/EstadoRow'
         		})
         	},
         	updateEstado(estado){
-        		axios.patch('/estado/'+ estado.id, estado)
+        		axios.patch('api/estado/'+ estado.id, estado)
         		.then(response => {
         			estado.editing = false
         			this.$message({
@@ -118,7 +118,7 @@ import EstadoRow from '../components/EstadoRow'
         		}).then(() => {
 	        		let index = this.estados.indexOf(estado)
 	                this.estados.splice(index, 1)
-	        		axios.delete('/estado/'+ estado.id)
+	        		axios.delete('api/estado/'+ estado.id)
           			this.$message({
             			type: 'success',
             			message: 'Borrado completado'

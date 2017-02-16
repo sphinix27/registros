@@ -16,4 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::resource('registro', 'RegistrosController');
+
+Route::middleware('auth:api')->resource('delito', 'DelitosController');
+Route::middleware('auth:api')->resource('estado', 'EstadosController');
+Route::middleware('auth:api')->resource('registro', 'RegistrosController');

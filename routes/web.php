@@ -19,6 +19,10 @@ Route::get('/home', function () {
     return view('home');
 });
 
-Route::resource('delito', 'DelitosController');
-Route::resource('estado', 'EstadosController');
-Route::resource('registro', 'RegistrosController');
+// Route::resource('delito', 'DelitosController');
+// Route::resource('estado', 'EstadosController');
+// Route::resource('registro', 'RegistrosController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');

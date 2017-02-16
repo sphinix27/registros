@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config('app.locale') }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,14 +38,14 @@
             <div class="nav-right nav-menu is-hidden-tablet">
 
                 @if (Auth::guest())
-                    <a class="nav-item" href="#">
+                    <a class="nav-item" href="{{ route('login') }}">
                         Login
                     </a>
-                    <a class="nav-item" href="#">
+                    <a class="nav-item" href="{{ route('register') }}">
                         Register
                     </a>
                 @else                    
-                    <a href="#"
+                    <a href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
                         Logout
@@ -54,10 +54,10 @@
             </div>
             <div class="nav-right nav-menu">
                 @if (Auth::guest())
-                    <a class="nav-item" href="#">
+                    <a class="nav-item" href="{{ route('login') }}">
                         Login
                     </a>
-                    <a class="nav-item" href="#">
+                    <a class="nav-item" href="{{ route('register') }}">
                         Register
                     </a>
                 @else
@@ -69,7 +69,7 @@
                             </span>
                         </a>
                         <div slot="content">
-                            <a href="#"
+                            <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                 Logout
@@ -115,12 +115,29 @@
                     </router-link>
                 </li>
             </ul>
+            @if (!Auth::guest())
+            <ul class="logout">
+                <li>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                        <i class="fa fa-power-off fa-2x"></i>
+                        <span class="nav-text">
+                            Logout
+                        </span>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form>
+                </li>  
+            </ul>
+            @endif
         </sidebar>
         <section class="section">
             <div class="container">
                 <router-view></router-view>
             </div>
         </section>
+        @yield('content')
     </div>
 
     <!-- Scripts -->

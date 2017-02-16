@@ -54,7 +54,7 @@ import DelitoRow from '../components/DelitoRow'
 			}
 		},
 		mounted() {
-            axios.get('delito')
+            axios.get('api/delito')
             .then( response => {
 				this.delitos = response.data.map(delito => {
 					delito.editing = false
@@ -73,7 +73,7 @@ import DelitoRow from '../components/DelitoRow'
         		this.delitos.push(newDelito)
         	},
         	storeDelito(delito){
-        		axios.post('/delito', delito)
+        		axios.post('api/delito', delito)
         		.then(response => {
         			let index = this.delitos.indexOf(delito)
         			response.data.delito.editing = false
@@ -94,7 +94,7 @@ import DelitoRow from '../components/DelitoRow'
         		})
         	},
         	updateDelito(delito){
-        		axios.patch('/delito/'+ delito.id, delito)
+        		axios.patch('api/delito/'+ delito.id, delito)
         		.then(response => {
         			delito.editing = false
         			this.$message({
@@ -120,7 +120,7 @@ import DelitoRow from '../components/DelitoRow'
         		}).then(() => {
 	        		let index = this.delitos.indexOf(delito)
 	                this.delitos.splice(index, 1)
-	        		axios.delete('/delito/'+ delito.id)
+	        		axios.delete('api/delito/'+ delito.id)
           			this.$message({
             			type: 'success',
             			message: 'Borrado completado'

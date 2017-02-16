@@ -97,7 +97,7 @@ import Vodal from 'vodal'
             }
         },
         mounted() {
-            axios.get('registro')
+            axios.get('api/registro')
             .then( response => {
                 this.delitos = response.data.delitos
                 this.estados = response.data.estados
@@ -132,7 +132,7 @@ import Vodal from 'vodal'
                 this.registros.push(newRegistro)
             },
             storeRegistro(registro){
-                axios.post('/registro', registro)
+                axios.post('api/registro', registro)
                 .then(response => {
                     let index = this.registros.indexOf(registro)
                     response.data.registro.editing = false
@@ -153,7 +153,7 @@ import Vodal from 'vodal'
                 })
             },
             storeRegistro2(registro){
-                axios.post('/registro', registro)
+                axios.post('api/registro', registro)
                 .then(response => {                    
                     response.data.registro.editing = false
                     this.registros.push(response.data.registro)
@@ -185,7 +185,7 @@ import Vodal from 'vodal'
                 })
             },
             updateRegistro(registro){
-                axios.patch('/registro/'+ registro.id, registro)
+                axios.patch('api/registro/'+ registro.id, registro)
                 .then(response => {
                     registro.editing = false
                     this.$message({
@@ -211,7 +211,7 @@ import Vodal from 'vodal'
                 }).then(() => {
                     let index = this.registros.indexOf(registro)
                     this.registros.splice(index, 1)
-                    axios.delete('/registro/'+ registro.id)
+                    axios.delete('api/registro/'+ registro.id)
                     this.$message({
                         type: 'success',
                         message: 'Borrado completado'

@@ -3,11 +3,15 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">Home</router-link>
-        <el-button type="primary">Default Button</el-button>
-        <a class="button is-primary">White</a>
-        <ui-button :size="size" color="primary">Normal</ui-button>
-    </div>    
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dashboard</div>
+
+                <div class="panel-body">
+                    You are logged in!
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
