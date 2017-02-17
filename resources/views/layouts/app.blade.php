@@ -23,20 +23,8 @@
 </head>
 <body>
     <div id="app">
-        <nav class="nav has-shadow">
-            <div class="nav-left">
-                <a class="nav-item">
-                    <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">
-                </a>
-            </div>
-
-            <span class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-            <div class="nav-right nav-menu is-hidden-tablet">
-
+        <navbar>
+            <template slot="hidden">
                 @if (Auth::guest())
                     <a class="nav-item" href="{{ route('login') }}">
                         Login
@@ -51,8 +39,8 @@
                         Logout
                     </a>                            
                 @endif
-            </div>
-            <div class="nav-right nav-menu">
+            </template>
+            <template slot="normal">
                 @if (Auth::guest())
                     <a class="nav-item" href="{{ route('login') }}">
                         Login
@@ -60,28 +48,15 @@
                     <a class="nav-item" href="{{ route('register') }}">
                         Register
                     </a>
-                @else
-                    <dropdown trigger="hover">
-                        <a class="button is-white">
-                            <span>{{ Auth::user()->name }}</span>
-                            <span class="icon is-small">
-                                <i class="fa fa-angle-down"></i>
-                            </span>
-                        </a>
-                        <div slot="content">
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                            <form id="logout-form" action="#" method="POST" style="display: none;">
-                                {{ csrf_field() }}
-                            </form>
-                        </div>
-                    </dropdown>
+                @else                    
+                    <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>                            
                 @endif
-            </div>            
-        </nav>
+            </template>
+        </navbar>
         <sidebar>
             <ul>
                 <li>
@@ -134,7 +109,13 @@
         </sidebar>
         <section class="section">
             <div class="container">
+            <transition
+                name="fade"
+                enter-active-class="fadeIn"
+                leave-active-class="fadeOut"
+                >
                 <router-view></router-view>
+            </transition>
             </div>
         </section>
         @yield('content')

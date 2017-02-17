@@ -15,6 +15,7 @@
                 </div>
             </div>
         </div>
+        <div class="table-responsive">
         <table class="table is-bordered is-striped">
             <thead>
                 <tr>
@@ -37,6 +38,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </template>
 
@@ -53,16 +55,19 @@ import DelitoRow from '../components/DelitoRow'
 				errors: [],
 			}
 		},
-		mounted() {
-            axios.get('api/delito')
-            .then( response => {
-				this.delitos = response.data.map(delito => {
-					delito.editing = false
-					return delito
-				})
-			})
+		created() {
+            this.fetchDelitos()
         },
         methods: {
+            fetchDelitos () {
+                axios.get('api/delito')
+                .then( response => {
+                    this.delitos = response.data.map(delito => {
+                        delito.editing = false
+                        return delito
+                    })
+                })
+            },
         	createDelito(){
         		let newDelito = {
         			articulo: '',

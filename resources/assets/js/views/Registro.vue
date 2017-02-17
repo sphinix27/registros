@@ -33,6 +33,7 @@
                 </div>
             </div>
         </div>
+        <div class="table-responsive">
         <table class="table is-bordered is-striped">
             <thead>
                 <tr>
@@ -64,6 +65,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </template>
 
@@ -239,4 +241,5 @@ import Vodal from 'vodal'
 
 <style lang="scss">
 @import "~vodal/door.css";
+
 </style>

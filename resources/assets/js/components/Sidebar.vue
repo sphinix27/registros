@@ -1,12 +1,12 @@
 <template>
-<aside class="app-sidebar">
-	<div class="area">
-		
-	</div>
-	<nav class="main-menu">
-		<slot></slot>              
-    </nav>
-</aside>
+  <aside class="app-sidebar is-hidden-mobile">
+  	<div class="area">
+  		
+  	</div>
+  	<nav class="main-menu">
+  		<slot></slot>              
+      </nav>
+  </aside>
 </template>
 <script>
 export default {

@@ -14,6 +14,7 @@ import router from './routes';
  */
 
 Vue.component('sidebar', require('./components/Sidebar.vue'));
+Vue.component('navbar', require('./components/Navbar.vue'));
 Vue.component('example', require('./components/Example.vue'));
 Vue.component(
     'passport-clients',
@@ -32,6 +33,6 @@ Vue.component(
 
 const app = new Vue({
     el: '#app',
-
+    
     router
 });
