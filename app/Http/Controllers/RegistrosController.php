@@ -20,7 +20,8 @@ class RegistrosController extends Controller
      */
     public function index()
     {
-        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados'])->get();
+        $limit = request()->limit;
+        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados'])->paginate($limit);
         $delitos = Delito::select('id', 'nombre')->get();
         $estados = Estado::select('id', 'nombre')->get();
         $personas = Persona::select('id', 'nombre')->get();

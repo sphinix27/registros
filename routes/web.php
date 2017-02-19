@@ -19,10 +19,8 @@ Route::get('/home', function () {
     return view('home');
 });
 
-// Route::resource('delito', 'DelitosController');
-// Route::resource('estado', 'EstadosController');
-// Route::resource('registro', 'RegistrosController');
-
-Auth::routes();
+Route::post('login', 'Auth\LoginController@login')->name('login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/home', 'HomeController@index');
+Route::post('/logins', 'LoginController@authenticate');

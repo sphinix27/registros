@@ -30,9 +30,36 @@ Vue.component(
     'passport-personal-access-tokens',
     require('./components/passport/PersonalAccessTokens.vue')
 );
+import auth from './auth'
+
+router.beforeEach((to, from, next) => {
+	if (to.fullPath === '/login')
+		next()
+	else {
+		axios.get('api/user')
+		.then( response => {
+			next()
+			auth.user.name = response.data.name
+			auth.user.username = response.data.username
+			auth.user.authenticated = true
+		}).catch( error => {
+			next({ path: '/login'})
+		})
+		// auth.check()
+		// if (user.authenticated){
+		// 	next()
+		// }
+		// else {
+		// 	next({ path: '/login'})
+		// }
+	}
+})
+
 
 const app = new Vue({
     el: '#app',
-    
+    data: {
+    	user: auth.user
+    },
     router
 });

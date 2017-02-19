@@ -1,16 +1,59 @@
 <template>
-  <aside class="app-sidebar is-hidden-mobile">
-  	<div class="area">
-  		
-  	</div>
-  	<nav class="main-menu">
-  		<slot></slot>              
-      </nav>
-  </aside>
+    <aside class="app-sidebar is-hidden-mobile" v-if="user.authenticated">
+    	<div class="area">
+    		
+    	</div>
+    	<nav class="main-menu">
+            <ul>
+                <li>
+                    <router-link to="/home" >
+                        <i class="fa fa-book fa-2x"></i>
+                        <span class="nav-text">Inicio</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/estados" >
+                        <i class="fa fa-briefcase fa-2x"></i>
+                        <span class="nav-text">Estados</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/importar" >
+                        <i class="fa fa-upload fa-2x"></i>
+                        <span class="nav-text">Importar</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/delitos" >
+                        <i class="fa fa-balance-scale fa-2x"></i>
+                        <span class="nav-text">Delitos</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/registros" >
+                        <i class="fa fa-book fa-2x"></i>
+                        <span class="nav-text">Registros</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/about" >
+                        <i class="fa fa-book fa-2x"></i>
+                        <span class="nav-text">About</span>
+                    </router-link>
+                </li>
+            </ul>
+    		<slot name="logout"></slot>              
+        </nav>
+    </aside>
 </template>
 <script>
+import auth from '../auth'
 export default {
-
+    data() { 
+        return { 
+            user: auth.user
+        }
+    },
 }
 </script>
 <style lang="scss">

@@ -8,6 +8,7 @@ class Persona extends Model
 {
     protected $fillable = ['nombre'];
 
+    protected $hidden = ['pivot'];
 
     public static function createPersonasRegistro($request)
     {

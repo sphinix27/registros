@@ -15,6 +15,10 @@
                 </div>
             </div>
         </div>
+        <pagination 
+            :pagination="pagination"
+            :offset="offset"
+            @change-page="changePage"></pagination>
         <div class="table-responsive">
         <table class="table is-bordered is-striped">
             <thead>
@@ -38,34 +42,53 @@
                 </tr>
             </tbody>
         </table>
+        <pagination 
+            :pagination="pagination"
+            :offset="offset"
+            @change-page="changePage"></pagination>
         </div>
     </div>
 </template>
 
 <script>
 import DelitoRow from '../components/DelitoRow'
+import Pagination from '../components/Pagination'
     export default {
     	components: {
-    		DelitoRow
+    		DelitoRow,
+            Pagination
     	},
         data() {
 			return {
 				failure: false,
 				delitos: [],
 				errors: [],
+                pagination: {
+                    total: 0, per_page: 10,
+                    from: 1, to: 0,
+                    current_page: 1
+                },
+                offset: 4,
 			}
 		},
 		created() {
-            this.fetchDelitos()
+            this.fetchDelitos(this.pagination.current_page)
         },
         methods: {
-            fetchDelitos () {
-                axios.get('api/delito')
+            fetchDelitos (page) {
+                this.delitos = []
+                axios.get('api/delito', {
+                    params: {
+                        page: page,
+                        limit: this.pagination.per_page
+                    }
+                })
                 .then( response => {
-                    this.delitos = response.data.map(delito => {
+                    this.delitos = response.data.data.map(delito => {
                         delito.editing = false
                         return delito
                     })
+                    this.pagination = response.data
                 })
             },
         	createDelito(){
@@ -147,6 +170,9 @@ import DelitoRow from '../components/DelitoRow'
         		this.errors = {}
         		this.failure = false
         	},
+            changePage(page) {
+                this.fetchDelitos(page)
+            }
         }
     }
 </script>

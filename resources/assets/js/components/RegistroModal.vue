@@ -74,7 +74,6 @@
 	                help="Seleccione uno o más delitos"
 	                has-search
 	                multiple                
-	                :keys="{ label: 'nombre', value: 'id' }"
 	                :options="delitos"
 	                :invalid="failure"
 	                v-model="registro.delitos"
@@ -83,16 +82,18 @@
 	            </ui-select>
 	        </p>
 	        <p class="control">
-	            <ui-checkbox-group
-	            	label="Estado del caso"
-	            	name="estados"
-	            	help="Seleccione el/los estados del caso"
-	                :keys="{ label: 'nombre', value: 'id' }"
+	            <ui-select
+	            	lfloating-label
+	                label="Estados"
+	                name="estados"
+	                help="Seleccione uno o más estados"
+	                has-search
+	                multiple                
 	                :options="estados"
-	                v-model="registro.estados"
 	                :invalid="failure"
+	                v-model="registro.estados"
 	            ><p v-for="error in errors.estados">{{ error }}</p>
-	            </ui-checkbox-group>
+	            </ui-select>
 	        </p>
 	        <p class="control">
 	            <ui-radio-group
@@ -120,7 +121,12 @@
 	        </p>
         </div>
         <div slot="footer">
-            <ui-button color="primary" @click="store">Crear</ui-button>
+        	<template v-if="registro.editing">
+        		<ui-button color="primary" @click="edit">Guardar</ui-button>
+        	</template>
+        	<template v-else>
+            	<ui-button color="primary" @click="store">Crear</ui-button>        		
+        	</template>
             <ui-button slot="cancel" @click="cancel">Cancelar</ui-button>
         </div>
     </div>
@@ -166,6 +172,9 @@
 			},
 			store() {
 				this.$emit('store', this.registro)
+			},
+			edit() {
+				this.$emit('edit', this.registro)
 			},
 			cancel() {
 				this.$emit('cancel')

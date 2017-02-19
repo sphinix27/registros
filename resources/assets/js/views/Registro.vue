@@ -1,29 +1,24 @@
 <template>
     <div class="row">
-    <ui-modal ref="modal" title="Agregar Registro" size="large">
-        <registro-modal
+    <registro-modal-two
             :delitos="delitos"
             :estados="estados"
             :personas="personas"
             :registro="record"
             :failure="failure"
             :errors="errors"
-            @store="storeRegistro2"
-            @cancel="closeModal('modal')"
+            :show="show"
+            @hide="hide"
+            @store="storeRegistro"
+            @edit="updateRegistro"
             >        
-        </registro-modal>             
-    </ui-modal>
+        </registro-modal-two>      
         <div class="content column is-12">
             <div class="title is-2">Registros</div>
             <div class="nav menu">
                 <div class="container">
                     <div class="nav-left">
-                        <a id="add" class="nav-item is-tab" @click="createRegistro()">
-                            <span class="icon-btn">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                        </a>
-                        <a id="add2" class="nav-item is-tab" @click="openModal('modal')">
+                        <a id="add2" class="nav-item is-tab" @click="open">
                             <span class="icon-btn">
                                 <i class="fa fa-plus"></i>
                             </span>
@@ -33,53 +28,47 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-        <table class="table is-bordered is-striped">
-            <thead>
-                <tr>
-                    <th>N° DE CASO FIS</th>
-                    <th>FECHA</th>
-                    <th>DENUCIANTE O QUERRELANTE</th>
-                    <th>DENUCIADO O QUERRELLADO</th>
-                    <th>DELITO/S</th>
-                    <th>ESTADO DEL CASO</th>
-                    <th>SITUACION PROCESAL DE AUTOR PRESUNTO</th>
-                    <th>OBSERVACIONES</th>
-                    <th colspan="2">Enlaces</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr is="registro-row"
-                    v-for="registro in registros" 
-                    v-bind:key="registro"
-                    :delitos="delitos"
-                    :estados="estados"
-                    :personas="personas"
-                    :registro="registro"
-                    :failure="failure"
-                    :errors="errors"
-                    @store="storeRegistro"
-                    @edit="updateRegistro"
-                    @remove="removeRegistro"
-                    @cancel="cancelRegistro">
-                </tr>
-            </tbody>
-        </table>
+        <pagination 
+            :pagination="pagination"
+            :offset="offset"
+            @change-page="changePage"></pagination>
+        <div class="table-responsive">        
+            <registro-grid
+                :data="registros"
+                :columns="columns"
+                :filter-key="searchQuery"
+                @edit="edit"
+                @remove="removeRegistro">            
+            </registro-grid>
         </div>
+        <pagination 
+            :pagination="pagination"
+            :offset="offset"
+            @change-page="changePage"></pagination>
     </div>
 </template>
 
 <script>
-import RegistroRow from '../components/RegistroRow'
-import RegistroModal from '../components/RegistroModal'
-import Vodal from 'vodal'
+import RegistroModalTwo from '../components/RegistroModalTwo'
+import RegistroGrid from '../components/RegistroGrid'
+import Pagination from '../components/Pagination'
     export default {
         components: {
-            RegistroRow, Vodal, RegistroModal
+            RegistroGrid, Pagination, RegistroModalTwo
         },
         data() {
             return {
+                searchQuery: '',
+                columns: [],
+                show: false,
+
                 failure: false,
+                pagination: {
+                    total: 0, per_page: 10,
+                    from: 1, to: 0,
+                    current_page: 1
+                },
+                offset: 4,
                 registros: [],
                 errors: [],
                 delitos: [],
@@ -93,88 +82,66 @@ import Vodal from 'vodal'
                     delitos: [],
                     estados: [],
                     situacion_procesal: '',
-                    observaciones: '',
-                    editing: true
+                    observaciones: ''
                 }
             }
         },
         mounted() {
-            axios.get('api/registro')
-            .then( response => {
-                this.delitos = response.data.delitos
-                this.estados = response.data.estados
-                this.personas = response.data.personas
-                this.registros = response.data.registros.map(registro => {
-                    registro.editing = false
-                    return registro
-                })
-            })
+            this.fetchRegistros(this.pagination.current_page)
         },
         methods: {
-            openModal(ref) {
-                this.$refs[ref].open()
-            },
-            closeModal(ref) {
-                this.errors = []
-                this.failure = false
-                this.$refs[ref].close()
-            },
-            createRegistro(){
-                let newRegistro = {
+            hide () {
+                this.record = {
                     caso: '',
                     fecha: new Date(),
+                    denunciados: [{ nombre:''}],
+                    denunciantes: [{ nombre:''}],
                     delitos: [],
                     estados: [],
                     situacion_procesal: '',
                     observaciones: '',
-                    denunciados: [],
-                    denunciantes: [],
                     editing: true
                 }
-                this.registros.push(newRegistro)
+                this.show = false
+            },
+            open () {
+                this.record.editing = false
+                this.show = true
+            },
+            edit (registro) {
+                this.record = registro
+                this.record.editing = true
+                this.record.fecha = new Date(this.record.fecha)
+                if(this.record.observaciones === null)
+                    this.record.observaciones = ''
+                this.show = true
+            },
+            fetchRegistros (page) {
+                this.registros = []
+                axios.get('api/registro', {
+                    params: {
+                        page: page,
+                        limit: this.pagination.per_page
+                    }
+                })
+                .then( response => {
+                    this.delitos = response.data.delitos
+                    this.estados = response.data.estados
+                    this.personas = response.data.personas
+                    this.registros = response.data.registros.data
+                    this.pagination = response.data.registros
+                    this.columns = Object.keys(this.record)
+                })
             },
             storeRegistro(registro){
                 axios.post('api/registro', registro)
-                .then(response => {
-                    let index = this.registros.indexOf(registro)
-                    response.data.registro.editing = false
-                    this.registros.splice(index, 1, response.data.registro)
-                    this.$message({
-                        type: 'success',
-                        message: 'Registro agregado correctamente'
-                    });
-                    this.errors = {}
-                    this.failure = false
-                }).catch( error => {
-                    this.failure = true
-                    this.errors = error.response.data.errors
-                    this.$message({
-                        message: 'Ocurrió un error',
-                        type: 'error'
-                    });
-                })
-            },
-            storeRegistro2(registro){
-                axios.post('api/registro', registro)
                 .then(response => {                    
-                    response.data.registro.editing = false
                     this.registros.push(response.data.registro)
                     this.$message({
                         type: 'success',
                         message: 'Registro agregado correctamente'
                     });
-                    this.$refs['modal'].close()
-                    this.record = {
-                        caso: '',
-                        fecha: new Date(),
-                        denunciado: '',
-                        denunciante: '',
-                        delitos: [],
-                        estados: [],
-                        situacion_procesal: '',
-                        observaciones: '',
-                        editing: true
-                    }
+                    this.show = false
                     this.errors = {}
                     this.failure = false
                 }).catch( error => {
@@ -189,13 +156,19 @@ import Vodal from 'vodal'
             updateRegistro(registro){
                 axios.patch('api/registro/'+ registro.id, registro)
                 .then(response => {
-                    registro.editing = false
                     this.$message({
                         type: 'success',
                         message: 'Registro actualizado correctamente'
                     });
+                    let reg = _.find(this.registros, (o) => {
+                        return o.id === registro.id
+                    })
+                    let index = this.registros.indexOf(reg)
+                    let rec = response.data.registro
+                    this.registros.splice(index, 1, rec)
                     this.errors = {}
                     this.failure = false
+                    this.show = false
                 }).catch( error => {
                     this.failure = true
                     this.errors = error.response.data.errors
@@ -235,11 +208,9 @@ import Vodal from 'vodal'
                 this.errors = {}
                 this.failure = false
             },
+            changePage(page) {
+                this.fetchRegistros(page)
+            }
         }
     }
 </script>
-
-<style lang="scss">
-@import "~vodal/door.css";
-
-</style>

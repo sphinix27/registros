@@ -15,7 +15,8 @@ class DelitosController extends Controller
      */
     public function index()
     {
-        return Delito::all();
+        $limit = request()->limit;
+        return Delito::paginate($limit);
     }
 
     /**

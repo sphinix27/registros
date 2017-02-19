@@ -13,5 +13,12 @@ class Delito extends Model
     public function registros()
     {
         return $this->belongsToMany(Registro::class);
-    }    
+    }   
+
+    public static function saveAll($delitos)
+    {
+        foreach ($delitos as $delito) {
+        	Delito::create($delito);
+        }
+    } 
 }

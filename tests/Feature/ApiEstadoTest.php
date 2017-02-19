@@ -3,21 +3,31 @@
 namespace Tests\Feature;
 
 use App\Estado;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class ApiEstadoTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected function setUp()
+    {
+        parent::setUp();
+        Passport::actingAs(
+            factory(User::class)->create()
+        );
+    }
+
     /** @test */
     function can_view_all_estados()
     {
         $estados = factory(Estado::class, 4)->create();
 
-        $response = $this->json('GET', '/estado');
+        $response = $this->json('GET', 'api/estado');
 
         $response
         	->assertStatus(200)
@@ -27,7 +37,7 @@ class ApiEstadoTest extends TestCase
     /** @test */
     function can_create_a_estado()
     {
-    	$response = $this->json('POST', '/estado', [
+    	$response = $this->json('POST', 'api/estado', [
         	'nombre' => 'Cautelar'
         ]);
 
@@ -44,7 +54,7 @@ class ApiEstadoTest extends TestCase
     /** @test */
     function validation_when_creating_a_estado()
     {
-        $response = $this->json('POST', '/estado', [
+        $response = $this->json('POST', 'api/estado', [
         	'nombre' => ''
         ]);
 
@@ -69,7 +79,7 @@ class ApiEstadoTest extends TestCase
         	'nombre' => 'Cautelar'
         ];
 
-        $response = $this->json('PUT', 'estado/'.$estado->id, $updatedEstado);
+        $response = $this->json('PUT', 'api/estado/'.$estado->id, $updatedEstado);
 
         $response
     		->assertStatus(200)
@@ -84,7 +94,7 @@ class ApiEstadoTest extends TestCase
     {
         $estado = factory(Estado::class)->create();
 
-        $response = $this->json('PUT', 'estado/'.$estado->id, [
+        $response = $this->json('PUT', 'api/estado/'.$estado->id, [
         	'nombre' => ''
         ]);
 
@@ -104,7 +114,7 @@ class ApiEstadoTest extends TestCase
     {
         $estado = factory(Estado::class)->create();
 
-        $response = $this->json('DELETE', 'estado/'.$estado->id);
+        $response = $this->json('DELETE', 'api/estado/'.$estado->id);
 
         $response
     		->assertJson([

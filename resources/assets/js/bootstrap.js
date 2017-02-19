@@ -44,14 +44,29 @@ window.axios.defaults.headers.common = {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+window.Bus = new Vue()
 
 
 import VueBlu from 'vue-blu'
 import 'vue-blu/dist/css/vue-blu.min.css'
 Vue.use(VueBlu)
 
-import KeenUI from 'keen-ui';
-import 'keen-ui/dist/keen-ui.min.css'
+window.KeenUiConfig = {
+	UiCheckboxGroup: {
+		keys: {
+			label: 'nombre',
+			value: 'id'
+		}
+	},
+	UiSelect: {
+		keys: {
+			label: 'nombre',
+			value: 'id'
+		}
+	}
+}
+const KeenUI = require('keen-ui').default;
+require('keen-ui/dist/keen-ui.min.css')
 Vue.use(KeenUI);
 
 import ElementUI from 'element-ui'

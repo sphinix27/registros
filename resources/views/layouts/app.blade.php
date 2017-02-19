@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- Scripts -->
@@ -25,87 +25,38 @@
     <div id="app">
         <navbar>
             <template slot="hidden">
-                @if (Auth::guest())
-                    <a class="nav-item" href="{{ route('login') }}">
-                        Login
-                    </a>
-                    <a class="nav-item" href="{{ route('register') }}">
-                        Register
-                    </a>
-                @else                    
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
+                <a href="{{ route('logout') }}" 
+                    class="nav-item is-hidden-tablet"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
                         Logout
-                    </a>                            
-                @endif
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                </form>
             </template>
-            <template slot="normal">
-                @if (Auth::guest())
-                    <a class="nav-item" href="{{ route('login') }}">
-                        Login
-                    </a>
-                    <a class="nav-item" href="{{ route('register') }}">
-                        Register
-                    </a>
-                @else                    
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                        Logout
-                    </a>                            
-                @endif
+            <template slot="logout">
+                <a href="{{ route('logout') }}" class="nav-item is-tab is-hidden-mobile"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                    Logout
+                </a>
             </template>
         </navbar>
-        <sidebar>
-            <ul>
-                <li>
-                    <router-link to="/home" >
-                        <i class="fa fa-book fa-2x"></i>
-                        <span class="nav-text">Home</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/estados" >
-                        <i class="fa fa-briefcase fa-2x"></i>
-                        <span class="nav-text">Estados</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/delitos" >
-                        <i class="fa fa-balance-scale fa-2x"></i>
-                        <span class="nav-text">Delitos</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/registro" >
-                        <i class="fa fa-book fa-2x"></i>
-                        <span class="nav-text">Registros</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/about" >
-                        <i class="fa fa-book fa-2x"></i>
-                        <span class="nav-text">About</span>
-                    </router-link>
-                </li>
-            </ul>
-            @if (!Auth::guest())
-            <ul class="logout">
-                <li>
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                        <i class="fa fa-power-off fa-2x"></i>
-                        <span class="nav-text">
-                            Logout
-                        </span>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        {{ csrf_field() }}
-                    </form>
-                </li>  
-            </ul>
-            @endif
+        <sidebar> 
+            <template slot="logout">
+                <ul class="logout">
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            <i class="fa fa-power-off fa-2x"></i>
+                            <span class="nav-text">
+                                Logout
+                            </span>
+                        </a>
+                    </li>  
+                </ul>
+            </template>
         </sidebar>
         <section class="section">
             <div class="container">
@@ -122,7 +73,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/js/app.js"></script>
+    <script src="js/app.js"></script>
     <script>
         (function() {
             var burger = document.querySelector('.nav-toggle');
