@@ -12,6 +12,7 @@ class ImportarDelitosController extends Controller
 
 	public function store()
 	{
+        $this->authorize('admin', auth()->user());
 	    $delitos = request()->all();
     	$validator = $this->validator($delitos);
     	if($validator['fails'])
@@ -30,6 +31,7 @@ class ImportarDelitosController extends Controller
     
     public function show()
     {
+        $this->authorize('admin', auth()->user());
         $validator = $this->validatorPreview(request()->only(['file']));
 
     	if($validator->fails())

@@ -22,7 +22,7 @@
 	                name="fecha"
 	                :custom-formatter="pickerFormatter"
 	                orientation="landscape"
-	                help="Fecha de registro del caso"                
+	                help="Fecha de registro del caso"
 	                :invalid="failure"
 	                v-model="registro.fecha"
 	                ><p v-for="error in errors.fecha">{{ error }}</p>
@@ -186,7 +186,7 @@ import Vodal from 'vodal'
 				this.$emit('edit', this.registro)
 			},
 			pickerFormatter(date) {
-            	return date.toLocaleDateString();
+            	return moment(date).format('DD-MM-YYYY')
         	},
     	},
 	}

@@ -19,7 +19,16 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'username' => $faker->username,
         'password' => $password ?: $password = bcrypt('secret'),
+        'role' => $faker->randomElement(['admin','user']),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Turno::class, function (Faker\Generator $faker) {
+
+    return [
+        'fecha' => \Carbon\Carbon::now(),
+        'user_id' => 1        
     ];
 });
 
@@ -51,9 +60,6 @@ $factory->define(App\Registro::class, function (Faker\Generator $faker) {
     return [
         'caso' => $faker->numerify('FIS 1######'),
         'fecha' => \Carbon\Carbon::now(),
-        // 'denunciante' => $faker->name,
-        // 'denunciado' => $faker->name,
-        // 'estado' => $faker->randomElement(['CAUTELAR', 'IMPUTADO', 'INICIADO', 'OBSERVADO', 'DESESTIMADO']),
         'situacion_procesal' => $faker->randomElement(['APR', 'DIS', 'LIB']),
         'observaciones' => $faker->sentence,
     ];

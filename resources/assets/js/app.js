@@ -36,22 +36,19 @@ router.beforeEach((to, from, next) => {
 	if (to.fullPath === '/login')
 		next()
 	else {
-		axios.get('api/user')
-		.then( response => {
+		if (!auth.user.authenticated)
+			axios.get('api/me')
+			.then( response => {
+				next()
+				auth.user.name = response.data.name
+				auth.user.username = response.data.username
+				auth.user.role = response.data.role
+				auth.user.authenticated = true
+			}).catch( error => {
+				next({ path: '/login'})
+			})
+		else
 			next()
-			auth.user.name = response.data.name
-			auth.user.username = response.data.username
-			auth.user.authenticated = true
-		}).catch( error => {
-			next({ path: '/login'})
-		})
-		// auth.check()
-		// if (user.authenticated){
-		// 	next()
-		// }
-		// else {
-		// 	next({ path: '/login'})
-		// }
 	}
 })
 

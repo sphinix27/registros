@@ -7,7 +7,7 @@ use App\Estado;
 use Illuminate\Http\Request;
 
 class EstadosController extends Controller
-{
+{    
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +15,7 @@ class EstadosController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin', auth()->user());
         return Estado::all();
     }
 
@@ -26,6 +27,7 @@ class EstadosController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('admin', auth()->user());
         $validator = $this->validator($request->only(['nombre']));
 
         if($validator->fails())
@@ -53,6 +55,7 @@ class EstadosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('admin', auth()->user());
         $estado = Estado::findOrFail($id);
         $validator = $this->validator($request->only(['nombre']));
 
@@ -80,6 +83,7 @@ class EstadosController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('admin', auth()->user());
         $estado = Estado::findOrFail($id);
         $estado->delete();
         return ['deleted' => true];

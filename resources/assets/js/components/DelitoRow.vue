@@ -9,14 +9,16 @@
 			<td>{{ delito.inciso }}</td>
 			<td>{{ delito.nombre }}</td>
 			<td class="is-icon">
-			  	<a @click="edit()">
+			  	<a @click="edit()" ref="edit">
 			  	  	<i class="fa fa-edit"></i>
 			  	</a>
+			  	<ui-tooltip trigger="edit" position="top center">Editar</ui-tooltip>
 			</td>
 			<td class="is-icon">
-	            <a @click="remove()">
+	            <a @click="remove()" ref="delete">
 				  	<i class="fa fa-trash"></i>
-				</a>			
+				</a>
+				<ui-tooltip trigger="delete" position="top center">Eliminar</ui-tooltip>			
 			</td>			
 		</template>
 		<template v-else>
@@ -52,26 +54,30 @@
 			</td>
 			<template v-if="delito.id">
 		    	<td class="is-icon">
-				  	<a @click="update()">
+				  	<a @click="update()" ref="update">
 				  	  	<i class="fa fa-check"></i>
 				  	</a>
+				  	<ui-tooltip trigger="update" position="top center">Guardar</ui-tooltip>
 				</td>
 				<td class="is-icon">
-				  	<a @click="cancel()">
+				  	<a @click="cancel()" ref="cancel">
 				  	  	<i class="fa fa-ban"></i>
 				  	</a>
+				  	<ui-tooltip trigger="cancel" position="top center">Cancelar</ui-tooltip>
 				</td>			                    	
 			</template>
 			<template v-else>
 				<td class="is-icon">
-					<a @click="store()" id="store">
+					<a @click="store()" id="store" ref="store">
 				  	  	<i class="fa fa-check"></i>
 				  	</a>
+				  	<ui-tooltip trigger="store" position="top center">Crear</ui-tooltip>
 				</td>
 				<td class="is-icon">
-				  	<a @click="cancel()">
+				  	<a @click="cancel()" ref="cancel">
 				  	  	<i class="fa fa-ban"></i>
 				  	</a>
+				  	<ui-tooltip trigger="cancel" position="top center">Cancelar</ui-tooltip>
 				</td>			                    	
 			</template>
 		</template>

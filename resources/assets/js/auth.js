@@ -1,6 +1,7 @@
 let user = {
 	name: null,
 	username: null,
+	role: null,
 	authenticated: false
 }
 
@@ -9,7 +10,7 @@ export default {
 	check () {
 		if (user.name === null && user.username === null)
 		{
-			axios.get('api/user')
+			axios.get('api/me')
 			.then( response => {
 				this.user = response.data
 				this.user.authenticated = true

@@ -5,11 +5,12 @@
             <div class="nav menu">
                 <div class="container">
                     <div class="nav-left">
-                        <a id="add" class="nav-item is-tab" @click="createDelito()">
+                        <a id="add" class="nav-item is-tab" @click="createDelito()" ref="new">
                             <span class="icon-btn">
                                 <i class="fa fa-plus"></i>
                             </span>
                         </a>
+                        <ui-tooltip trigger="new" position="top center">Nuevo</ui-tooltip>
                         <slot></slot>                        
                     </div>                
                 </div>

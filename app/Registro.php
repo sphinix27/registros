@@ -33,6 +33,12 @@ class Registro extends Model
                     ->select('id', 'nombre');
     }
 
+
+    public function turno()
+    {
+        return $this->belongsTo(Turno::class);
+    }
+
     public function attachEstados($estados)
     {
         $collection = collect($estados);

@@ -9,7 +9,6 @@
             :errors="errors"
             :show="show"
             @hide="hide"
-            @store="storeRegistro"
             @edit="updateRegistro"
             >        
         </registro-modal-two>      
@@ -18,11 +17,6 @@
             <div class="nav menu">
                 <div class="container">
                     <div class="nav-left">
-                        <a id="add2" class="nav-item is-tab" @click="open">
-                            <span class="icon-btn">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                        </a>
                         <slot></slot>                        
                     </div>                
                 </div>
@@ -33,13 +27,34 @@
             :offset="offset"
             @change-page="changePage"></pagination>
         <div class="table-responsive">        
-            <registro-grid
-                :data="registros"
-                :columns="columns"
-                :filter-key="searchQuery"
-                @edit="edit"
-                @remove="removeRegistro">            
-            </registro-grid>
+            <table class="table is-bordered is-striped">
+                <thead>
+                    <tr>
+                        <th>Caso</th>
+                        <th>Fecha</th>
+                        <th>Denunciantes</th>
+                        <th>Denunciados</th>
+                        <th>Delitos</th>
+                        <th>Estados</th>
+                        <th>Situación Procesal</th>
+                        <th>Observaciones</th>
+                        <th colspan="2">Enlaces</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr is="registro-row"
+                        v-for="registro in registros"
+                        :delitos="delitos"
+                        :estados="estados"
+                        :personas="personas"
+                        :registro="registro"
+                        :failure="failure"
+                        :errors="errors"
+                        @edit="edit"
+                        @remove="removeRegistro">
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <pagination 
             :pagination="pagination"
@@ -50,16 +65,14 @@
 
 <script>
 import RegistroModalTwo from '../components/RegistroModalTwo'
-import RegistroGrid from '../components/RegistroGrid'
+import RegistroRow from '../components/RegistroRow'
 import Pagination from '../components/Pagination'
     export default {
         components: {
-            RegistroGrid, Pagination, RegistroModalTwo
+            RegistroRow, Pagination, RegistroModalTwo
         },
         data() {
             return {
-                searchQuery: '',
-                columns: [],
                 show: false,
 
                 failure: false,
@@ -76,7 +89,7 @@ import Pagination from '../components/Pagination'
                 personas: [],
                 record: {
                     caso: '',
-                    fecha: new Date(),
+                    fecha: moment()._d,
                     denunciantes: [{ nombre:''}],
                     denunciados: [{ nombre:''}],
                     delitos: [],
@@ -93,7 +106,7 @@ import Pagination from '../components/Pagination'
             hide () {
                 this.record = {
                     caso: '',
-                    fecha: new Date(),
+                    fecha: moment()._d,
                     denunciados: [{ nombre:''}],
                     denunciantes: [{ nombre:''}],
                     delitos: [],
@@ -102,6 +115,8 @@ import Pagination from '../components/Pagination'
                     observaciones: '',
                     editing: true
                 }
+                this.errors = [],
+                this.failure = false
                 this.show = false
             },
             open () {
@@ -111,7 +126,7 @@ import Pagination from '../components/Pagination'
             edit (registro) {
                 this.record = registro
                 this.record.editing = true
-                this.record.fecha = new Date(this.record.fecha)
+                this.record.fecha = moment(this.record.fecha)._d
                 if(this.record.observaciones === null)
                     this.record.observaciones = ''
                 this.show = true
@@ -130,27 +145,6 @@ import Pagination from '../components/Pagination'
                     this.personas = response.data.personas
                     this.registros = response.data.registros.data
                     this.pagination = response.data.registros
-                    this.columns = Object.keys(this.record)
-                })
-            },
-            storeRegistro(registro){
-                axios.post('api/registro', registro)
-                .then(response => {                    
-                    this.registros.push(response.data.registro)
-                    this.$message({
-                        type: 'success',
-                        message: 'Registro agregado correctamente'
-                    });
-                    this.show = false
-                    this.errors = {}
-                    this.failure = false
-                }).catch( error => {
-                    this.failure = true
-                    this.errors = error.response.data.errors
-                    this.$message({
-                        message: 'Ocurrió un error',
-                        type: 'error'
-                    });
                 })
             },
             updateRegistro(registro){
@@ -166,9 +160,7 @@ import Pagination from '../components/Pagination'
                     let index = this.registros.indexOf(reg)
                     let rec = response.data.registro
                     this.registros.splice(index, 1, rec)
-                    this.errors = {}
-                    this.failure = false
-                    this.show = false
+                    this.hide()
                 }).catch( error => {
                     this.failure = true
                     this.errors = error.response.data.errors

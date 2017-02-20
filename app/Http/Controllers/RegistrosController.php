@@ -6,6 +6,7 @@ use App\Delito;
 use App\Estado;
 use App\Persona;
 use App\Registro;
+use App\Turno;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -33,6 +34,23 @@ class RegistrosController extends Controller
         ];
     }
 
+    public function show($id)
+    {
+        $limit = request()->limit;
+        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados', 'turno'])->where('turno_id', $id)->paginate($limit);
+        $delitos = Delito::select('id', 'nombre')->get();
+        $estados = Estado::select('id', 'nombre')->get();
+        $personas = Persona::select('id', 'nombre')->get();
+        $turno = Turno::findOrFail($id);
+        return [
+            'registros' => $registros,
+            'delitos' => $delitos,
+            'estados' => $estados,
+            'personas' => $personas,
+            'turno' => $turno
+        ];
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -51,7 +69,7 @@ class RegistrosController extends Controller
                 'registro' => $request->all()
             ])->setStatusCode(422);
         }
-        $registro = Registro::formatFecha($request->only(['caso', 'fecha', 'situacion_procesal', 'observaciones']));
+        $registro = Registro::formatFecha($request->only(['turno_id','caso', 'fecha', 'situacion_procesal', 'observaciones']));
         $registro = Registro::create($registro);
         $registro->delitos()->attach(collect($request->delitos)->pluck('id'));
         $registro->attachEstados($request->estados);
@@ -127,8 +145,13 @@ class RegistrosController extends Controller
 
     public function validator($data)
     {
+        $caso = request()->intersect('id');
+        if(!array_has($caso, 'id'))
+            $id = 0;
+        else
+            $id = $caso['id'];
         return Validator::make($data, [
-            'caso' => ['required', 'min:7', 'max:20'],
+            'caso' => ['required', 'min:7', 'max:20', Rule::unique('registros')->ignore($id)],
             'fecha' => ['required', 'date'],
             'situacion_procesal' => ['required', Rule::in(['APR', 'DIS', 'LIB'])],
             'observaciones' => ['present', 'max:256'],

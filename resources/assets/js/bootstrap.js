@@ -44,12 +44,15 @@ window.axios.defaults.headers.common = {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+window.moment = require('moment')
+moment.locale('es')
+
 window.Bus = new Vue()
 
 
-import VueBlu from 'vue-blu'
-import 'vue-blu/dist/css/vue-blu.min.css'
-Vue.use(VueBlu)
+// import VueBlu from 'vue-blu'
+// import 'vue-blu/dist/css/vue-blu.min.css'
+// Vue.use(VueBlu)
 
 window.KeenUiConfig = {
 	UiCheckboxGroup: {
@@ -75,7 +78,4 @@ Vue.use(ElementUI)
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
-
-import moment from 'moment'
-Vue.use(moment)
 

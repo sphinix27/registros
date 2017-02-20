@@ -7,26 +7,38 @@
             <ul>
                 <li>
                     <router-link to="/home" >
-                        <i class="fa fa-book fa-2x"></i>
+                        <i class="fa fa-home fa-2x"></i>
                         <span class="nav-text">Inicio</span>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/estados" >
+                    <router-link to="/usuarios" v-if="user.role === 'admin'">
+                        <i class="fa fa-user fa-2x"></i>
+                        <span class="nav-text">Usuarios</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/estados" v-if="user.role === 'admin'">
                         <i class="fa fa-briefcase fa-2x"></i>
                         <span class="nav-text">Estados</span>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/importar" >
+                    <router-link to="/importar" v-if="user.role === 'admin'">
                         <i class="fa fa-upload fa-2x"></i>
                         <span class="nav-text">Importar</span>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/delitos" >
+                    <router-link to="/delitos" v-if="user.role === 'admin'">
                         <i class="fa fa-balance-scale fa-2x"></i>
                         <span class="nav-text">Delitos</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/turnos" >
+                        <i class="fa fa-list-ol fa-2x"></i>
+                        <span class="nav-text">Turnos</span>
                     </router-link>
                 </li>
                 <li>

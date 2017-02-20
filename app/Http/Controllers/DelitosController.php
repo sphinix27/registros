@@ -15,6 +15,7 @@ class DelitosController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin', auth()->user());
         $limit = request()->limit;
         return Delito::paginate($limit);
     }
@@ -27,6 +28,7 @@ class DelitosController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('admin', auth()->user());
         $validator = $this->validator($request->only(['articulo', 'inciso','nombre']));
 
         if($validator->fails())
@@ -54,6 +56,7 @@ class DelitosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('admin', auth()->user());
         $delito = Delito::findOrFail($id);
         $validator = $this->validator($request->only(['articulo', 'inciso','nombre']));
 
@@ -81,6 +84,7 @@ class DelitosController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('admin', auth()->user());
         $delito = Delito::findOrFail($id);
         $delito->delete();
         return ['deleted' => true];

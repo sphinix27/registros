@@ -19,9 +19,11 @@
                 <router-link to="/login" class="nav-item is-tab is-hidden-tablet" v-if="!user.authenticated">Login</router-link>
                 <template v-if="user.authenticated">
                     <router-link to="/home" class="nav-item is-hidden-tablet">Inicio</router-link>
-                    <router-link to="/estados" class="nav-item is-hidden-tablet">Estados</router-link>
-                    <router-link to="/importar" class="nav-item is-hidden-tablet">Importar</router-link>
-                    <router-link to="/delitos" class="nav-item is-hidden-tablet">Delitos</router-link>
+                    <router-link to="/usuarios" class="nav-item is-hidden-tablet" v-if="user.role === 'admin'">Usuarios</router-link>
+                    <router-link to="/estados" class="nav-item is-hidden-tablet" v-if="user.role === 'admin'">Estados</router-link>
+                    <router-link to="/importar" class="nav-item is-hidden-tablet" v-if="user.role === 'admin'">Importar</router-link>
+                    <router-link to="/delitos" class="nav-item is-hidden-tablet" v-if="user.role === 'admin'">Delitos</router-link>
+                    <router-link to="/turnos" class="nav-item is-hidden-tablet">Turnos</router-link>
                     <router-link to="/registros" class="nav-item is-hidden-tablet">Registros</router-link>
                     <slot name="hidden"></slot>
                 </template>
