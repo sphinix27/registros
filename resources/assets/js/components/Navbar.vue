@@ -29,12 +29,11 @@
                 </template>
             </div>
             <div class="nav-right nav-menu">
-                <ui-progress-circular color="multi-color" v-show="loading"></ui-progress-circular>
                 <router-link to="/login" class="nav-item is-tab is-hidden-mobile" v-if="!user.authenticated">Login</router-link>
                 <slot name="logout" v-if="user.authenticated"></slot>
+                <a class="nav-item"><span class="icon"></span></a>
             </div>            
         </nav>
-        <ui-preloader :show="loading"></ui-preloader>
     </div>
 </template>
 <script>
@@ -42,28 +41,9 @@ import auth from '../auth'
     export default {        
         data() { 
             return { 
-                loading: false,
                 user: auth.user
             }
         },
-        beforeRouteEnter (to, from, next) {
-            next(vm => {
-                vm.loading = true
-                setTimeout(
-                    () => {
-                        vm.loading = false
-                    }, 500)
-            })
-        },
-        watch: {
-            $route () {
-                this.loading = true
-                setTimeout(
-                    () => {
-                        this.loading = false
-                }, 500)
-            }
-      }
     }
 </script>
 <style lang="scss">

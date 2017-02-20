@@ -13,7 +13,11 @@ class TurnosController extends Controller
     public function index()
     {
     	$limit = request()->limit;
-        return Turno::paginate($limit);
+        if(auth()->user()->isAdmin())
+            $turnos = Turno::paginate($limit);
+        else
+            $turnos = Turno::where('user_id', '=',auth()->user()->id)->paginate($limit);
+        return $turnos;
     }
 
 

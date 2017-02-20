@@ -4,32 +4,31 @@
 	        <div class="column is-8 is-offset-2">
 	            <div class="panel">
 	                <div class="panel-heading">Login</div>
-	                	<div class="panel-block">        
-	                        <div class="column is-10 is-offset-1">
-	                            <label for="username" class="label">Username</label>
-	                                <p class="controln">
-	                                    <input class="input" :class="[ 'errors.username' ? '' : 'is-danger' ]" name="username" v-model="username" required autofocus>
-	                                </p>
-	                                    <span class="help is-danger" v-if="errors.username">
-	                                        <strong>{{ errors.username }}</strong>
-	                                    </span>
-	                        </div>
+	                	<div class="panel-block">
+	                		<form @submit.prevent="login">
+		                        <div class="column is-10 is-offset-1">
+		                            <label for="username" class="label">Username</label>
+		                                <p class="controln">
+		                                    <input class="input" :class="[ errors ? 'is-danger' : '' ]" name="username" v-model="username" required autofocus>
+		                                </p>
+		                                <span class="help is-danger" v-if="errors">
+		                                    {{ errors }}
+		                                </span>
+		                        </div>
 
-	                        <div class="column is-10 is-offset-1">
-	                            <label for="password" class="label">Password</label>
-	                                <p class="control">
-	                                    <input type="password" class="input" :class="[ 'errors.password' ? '' : 'is-danger' ]" name="password" v-model="password" required>
-	                                </p>
-	                                <span class="help is-danger" v-if="errors.password">
-	                                    <strong>{{ errors.password }}</strong>
-	                                </span>
-	                        </div>
+		                        <div class="column is-10 is-offset-1">
+		                            <label for="password" class="label">Password</label>
+		                                <p class="control">
+		                                    <input type="password" class="input" name="password" v-model="password" required>
+		                                </p>
+		                        </div>
 
 	                            <div class="column is-10 is-offset-1">
-	                                <a class="button is-primary" @click.prevent="login">
+	                                <button class="button is-primary" >
 	                                    Login
-	                                </a>
+	                                </button>
 	                            </div>
+	                        </form>
 	                	</div>
 	            </div>
 	        </div>
@@ -45,10 +44,7 @@ import auth from '../auth'
 				auth: auth,
 				username: '',
 				password: '',
-				errors: {
-					username: '',
-					password: '',
-				}
+				errors: ''
 			}
 		},
 		methods: {
@@ -61,7 +57,7 @@ import auth from '../auth'
 					this.$router.push('/home')
 				})
 				.catch(errors => {
-					console.log(errors.reponse)
+					this.errors = errors.response.data.username
 				})
 			}
 		}

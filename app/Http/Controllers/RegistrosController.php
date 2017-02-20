@@ -9,6 +9,7 @@ use App\Registro;
 use App\Turno;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -22,7 +23,16 @@ class RegistrosController extends Controller
     public function index()
     {
         $limit = request()->limit;
-        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados'])->paginate($limit);
+        if(auth()->user()->isAdmin())
+            $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados', 'turno'])->paginate($limit);
+        else
+        {
+            $raw = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados', 'turno'])->paginate($limit);
+            $collection = $raw->filter(function ($registro) {
+                return $registro->turno['user_id'] === auth()->user()->id;
+            });
+            $registros = $this->paginate($collection, $limit)->setPath('registro');
+        }
         $delitos = Delito::select('id', 'nombre')->get();
         $estados = Estado::select('id', 'nombre')->get();
         $personas = Persona::select('id', 'nombre')->get();
@@ -37,7 +47,7 @@ class RegistrosController extends Controller
     public function show($id)
     {
         $limit = request()->limit;
-        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados', 'turno'])->where('turno_id', $id)->paginate($limit);
+        $registros = Registro::with(['delitos', 'estados', 'denunciantes', 'denunciados'])->where('turno_id', $id)->paginate($limit);
         $delitos = Delito::select('id', 'nombre')->get();
         $estados = Estado::select('id', 'nombre')->get();
         $personas = Persona::select('id', 'nombre')->get();
@@ -160,5 +170,13 @@ class RegistrosController extends Controller
             'denunciantes' => ['required', 'array'],
             'denunciados' => ['required', 'array'],
         ]);
+    }
+
+
+    public function paginate($items, $limit = 10)
+    {
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageItems = $items->slice(($currentPage - 1) * $limit, $limit);
+        return new LengthAwarePaginator($currentPageItems, count($items), $limit);
     }
 }

@@ -21,6 +21,7 @@
     "handsontable": "^0.31.0",
     "keen-ui": "^1.0.0",
     "moment": "^2.17.1",
+    "nprogress": "^0.2.0",
     "vodal": "^1.0.3",
     "vue-blu": "^0.1.9"
   }

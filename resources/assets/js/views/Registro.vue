@@ -30,6 +30,7 @@
             <table class="table is-bordered is-striped">
                 <thead>
                     <tr>
+                        <th>Turno</th>
                         <th>Caso</th>
                         <th>Fecha</th>
                         <th>Denunciantes</th>

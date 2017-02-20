@@ -16,6 +16,11 @@ class Turno extends Model
         return $this->hasMany(Registro::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public static function format($request)
     {
         $fecha = Carbon::parse($request['fecha']); 

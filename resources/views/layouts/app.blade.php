@@ -69,9 +69,21 @@
             </transition>
             </div>
         </section>
-        @yield('content')
     </div>
-
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Sistema de Control de Registros</strong> por Abel Barrientos.
+      </p>
+      <p>
+        <a class="icon" href="https://github.com/sphinix27/registros">
+          <i class="fa fa-github"></i>
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>
     <!-- Scripts -->
     <script src="js/app.js"></script>
     <script>

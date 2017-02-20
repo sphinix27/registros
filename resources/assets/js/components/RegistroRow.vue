@@ -4,6 +4,7 @@
 		enter-active-class="fadeInLeft"
 		leave-active-class="fadeOutRight">
 		<tr>
+			<td v-if="registro.turno">{{ registro.turno.fecha }}</td>
 			<td>{{ registro.caso }}</td>
 			<td>{{ registro.fecha | format }}</td>
 			<td><p v-for="denunciante in registro.denunciantes">{{ denunciante.nombre }}</p></td>
