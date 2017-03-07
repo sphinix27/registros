@@ -14,6 +14,12 @@
 			  	<ui-tooltip trigger="show" position="top center">Ver turno</ui-tooltip>
 			</td>
 			<td class="is-icon">
+			  	<a ref="inf" :href="url">
+			  	  	<i class="fa fa-file-pdf-o"></i>
+			  	</a>
+			  	<ui-tooltip trigger="inf" position="top center">Informe</ui-tooltip>
+			</td>
+			<td class="is-icon">
 			  	<a @click="edit()" ref="edit">
 			  	  	<i class="fa fa-edit"></i>
 			  	</a>
@@ -69,6 +75,11 @@
 		filters: {
 			fecha (date) {
 				return moment(date).format("dddd, D [de] MMMM [de] YYYY")
+			}
+		},
+		computed: {
+			url () {
+				return 'pdf/' + this.turno.id
 			}
 		},
 		methods: {

@@ -57,4 +57,17 @@ class Registro extends Model
         $request['fecha'] = $fecha->toDateString();
         return $request;
     }
+
+
+
+    public function hasEstado($estado)
+    {
+        foreach ($this->estados()->get() as $status)
+        {
+            if ($estado == $status->nombre)
+                return true;
+        }
+
+        return false;
+    }
 }

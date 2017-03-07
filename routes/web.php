@@ -24,3 +24,5 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/home', 'HomeController@index');
 Route::post('/logins', 'LoginController@authenticate');
+
+Route::middleware('auth')->get('/pdf/{id}', 'RegistroInformesController@show');

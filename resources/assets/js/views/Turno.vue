@@ -36,7 +36,7 @@
 		                <tr>
 		                    <th>Fecha</th>
 		                    <th>Total Registros</th>
-		                    <th colspan="3">Enlaces</th>
+		                    <th colspan="4">Enlaces</th>
 		                </tr>
 		            </thead>
 		            <tbody>

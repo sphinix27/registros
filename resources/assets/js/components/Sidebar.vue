@@ -47,12 +47,6 @@
                         <span class="nav-text">Registros</span>
                     </router-link>
                 </li>
-                <li>
-                    <router-link to="/about" >
-                        <i class="fa fa-book fa-2x"></i>
-                        <span class="nav-text">About</span>
-                    </router-link>
-                </li>
             </ul>
     		<slot name="logout"></slot>              
         </nav>

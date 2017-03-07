@@ -24,7 +24,13 @@
                             </span>
                         </a>
                         <ui-tooltip trigger="new" position="top center">Nuevo</ui-tooltip>
-                        <slot></slot>                        
+                        <a class="nav-item is-tab is-active" :href="url" ref="inf">
+                            <span class="icon-btn">
+                                <i class="fa fa-file-pdf-o"></i>
+                            </span>
+                        </a>
+                        <ui-tooltip trigger="inf" position="top center">Informe</ui-tooltip>
+                        <slot></slot>
                     </div>
                     <div class="nav-right">
                         <router-link to="/turnos" class="nav-item is-tab">
@@ -118,6 +124,11 @@ import Pagination from '../components/Pagination'
         mounted() {
             this.turno = this.$route.params.id
             this.fetchRegistros(this.pagination.current_page)
+        },
+        computed: {
+            url () {
+                return 'pdf/'+this.turno
+            }
         },
         methods: {
             hide () {
