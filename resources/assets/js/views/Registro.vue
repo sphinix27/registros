@@ -51,6 +51,7 @@
                         :registro="registro"
                         :failure="failure"
                         :errors="errors"
+                        :reg=true
                         @edit="edit"
                         @remove="removeRegistro">
                     </tr>

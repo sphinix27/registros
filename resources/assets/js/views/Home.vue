@@ -7,7 +7,7 @@
                         <div class="panel-heading">Dashboard</div>
 
                         <div class="panel-body">
-                            You are logged in!
+                            Haz iniciado sesión!
                         </div>
                     </div>
                 </div>
@@ -24,11 +24,6 @@ import Vodal from 'vodal'
             return {
                 show: false
             }
-        },
-        mounted() {
-            console.log('Component mounted.')
-        },
-        methods: {
         }
     }
 </script>

@@ -131,7 +131,7 @@ class RegistrosController extends Controller
 
         return [
             'updated' => true,
-            'registro' => $registro->load(['delitos', 'estados', 'denunciantes', 'denunciados'])
+            'registro' => $registro->load(['delitos', 'estados', 'denunciantes', 'denunciados', 'turno'])
         ];
     }
 
